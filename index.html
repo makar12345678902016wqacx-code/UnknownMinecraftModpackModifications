@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UnknownMinecraftModpackModifications</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Бокове меню (Sidebar) -->
+    <div class="sidebar">
+        <div class="logo-container">
+            <h2>🌌 UM³ ADMIN</h2>
+            <p class="site-url">https://UnknownMinecraftModpackModifications/</p>
+        </div>
+        <nav class="menu-links">
+            <a href="#" class="active" onclick="switchTab('office')" id="menu-office">🏢 Personal Office</a>
+            <a href="#" onclick="switchTab('wishlist')" id="menu-wishlist">⭐ Wishlist</a>
+            <a href="#" onclick="switchTab('cart')" id="menu-cart">🛒 Cart</a>
+            <a href="#" onclick="switchTab('free')" id="menu-free">🎮 Free Modpacks</a>
+            <a href="#" onclick="switchTab('premium')" id="menu-premium">💎 Premium Modpacks</a>
+        </nav>
+        
+        <div class="sidebar-settings">
+            <button class="btn-settings" onclick="toggleSettingsModal()" id="btn-settings-txt">⚙️ Settings</button>
+        </div>
+    </div>
+
+    <!-- Головна область контенту -->
+    <div class="main-content">
+        
+        <!-- 1. Екран Авторизації -->
+        <div class="card-box" id="login-screen">
+            <h2 id="login-title">Admin / User Login</h2>
+            <p id="login-desc">Enter your credentials for https://UnknownMinecraftModpackModifications/</p>
+            
+            <form onsubmit="handleLogin(event)">
+                <div class="input-group">
+                    <label id="label-email">Email Address</label>
+                    <input type="email" id="user-email" value="makar12345678902016wqacx@gmail.com" required>
+                </div>
+
+                <div class="input-group">
+                    <label id="label-code">Security Code</label>
+                    <input type="text" id="user-code" placeholder="Enter secure code..." required>
+                </div>
+
+                <button type="submit" class="btn-primary" id="btn-submit">Login to Account</button>
+            </form>
+        </div>
+
+        <!-- 2. Панель Адміністратора (Публікація товарів) -->
+        <div class="card-box wide-box" id="admin-dashboard" style="display: none;">
+            <h2 id="dash-title">Upload Premium Modpack</h2>
+            <p id="dash-desc">Configure video tutorials, hardware specifications, and pricing</p>
+            
+            <form onsubmit="publishModpack(event)">
+                <div class="form-grid">
+                    <div class="form-column">
+                        <div class="input-group">
+                            <label id="lbl-title">Modpack Title</label>
+                            <input type="text" id="p-title" placeholder="e.g., Ultra Tech NeoForge 1.21.1" required>
+                        </div>
+
+                        <div class="input-group">
+                            <label id="lbl-desc">Computer Requirements & Details</label>
+                            <textarea id="p-desc" placeholder="Describe RAM, CPU, GPU requirements..." required></textarea>
+                        </div>
+
+                        <div class="input-group">
+                            <label id="lbl-price">Price (UAH)</label>
+                            <input type="number" id="p-price" placeholder="Price based on complexity..." required>
+                        </div>
+                    </div>
+
+                    <div class="form-column">
+                        <div class="input-group">
+                            <label id="lbl-photo">Upload Cover Photo</label>
+                            <input type="file" accept="image/*" required>
+                        </div>
+
+                        <div class="input-group">
+                            <label id="lbl-video">Upload Tutorial Video (MP4)</label>
+                            <input type="file" accept="video/mp4, video/*" required>
+                        </div>
+
+                        <div class="input-group">
+                            <label id="lbl-size">File Size (e.g., 1.2 GB)</label>
+                            <input type="text" id="p-size" placeholder="File size after payment..." required>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-primary" id="btn-publish-txt">Publish to Site</button>
+            </form>
+        </div>
+
+        <!-- 3. Форма замовлення унікальної збірки (Для користувачів) -->
+        <div class="card-box wide-box" id="custom-order-screen" style="display: none;">
+            <h2 id="order-title">Order Custom Modpack</h2>
+            <p id="order-desc">Fill in the technical questionnaire for your individual build</p>
+            
+            <form onsubmit="submitCustomOrder(event)">
+                <div class="form-grid">
+                    <div class="form-column">
+                        <div class="input-group">
+                            <label id="lbl-ver">Minecraft Version</label>
+                            <select id="ord-version">
+                                <option value="1.21.11">1.21.11 (Latest)</option>
+                                <option value="1.21.1">1.21.1</option>
+                                <option value="1.20.1">1.20.1</option>
+                            </select>
+                        </div>
+
+                        <div class="input-group">
+                            <label id="lbl-lic">Game Type</label>
+                            <select id="ord-license">
+                                <option value="Licensed Game">Official License Launcher</option>
+                                <option value="TLauncher / Non-licensed">TLauncher / Cracked</option>
+                            </select>
+                        </div>
+
+                        <div class="input-group">
+                            <label id="lbl-client">Exact Launcher Name</label>
+                            <input type="text" id="ord-client" placeholder="e.g., TLauncher 2.896, Prism" required>
+                        </div>
+                    </div>
+
+                    <div class="form-column">
+                        <div class="input-group">
+                            <label id="lbl-mods">Estimated Mod Count</label>
+                            <input type="number" id="ord-modcount" value="10" min="10" oninput="calculateEstPrice()">
+                        </div>
+
+                        <div class="input-group">
+                            <label id="lbl-req">Mod & Feature Requirements</label>
+                            <textarea id="ord-details" placeholder="List required mods (Create, TaCZ, shaders)..." required></textarea>
+                        </div>
+
+                        <div class="price-preview">
+                            <span id="lbl-est-price">Estimated Price:</span>
+                            <strong id="est-price-val">10 UAH</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-primary" id="btn-submit-order">Send Request to Admin</button>
+            </form>
+        </div>
+
+    </div>
+
+    <!-- Модальне вікно Налаштувань Мови -->
+    <div id="settings-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="toggleSettingsModal()">&times;</span>
+            <h3 id="settings-title">Profile Settings</h3>
+            <div class="setting-item">
+                <label id="label-lang">Interface Language:</label>
+                <select id="lang-select" onchange="changeLanguage()">
+                    <option value="en" selected>English (Default)</option>
+                    <option value="uk">Українська</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <!-- Логіка інтерфейсу -->
+    <script>
+        let currentUserEmail = "";
+
+        function handleLogin(event) {
+            event.preventDefault();
+            currentUserEmail = document.getElementById('user-email').value;
+            document.getElementById('login-screen').style.display = 'none';
+
+            if (currentUserEmail === "makar12345678902016wqacx@gmail.com") {
+                document.getElementById('admin-dashboard').style.display = 'block';
+            } else {
+                document.getElementById('custom-order-screen').style.display = 'block';
+            }
+        }
+
+        function calculateEstPrice() {
+            let count = parseInt(document.getElementById('ord-modcount').value) || 10;
+            let price = Math.max(10, Math.floor(count * 1.5));
+            document.getElementById('est-price-val').innerText = price + " UAH";
+        }
+
+        function publishModpack(event) {
+            event.preventDefault();
+            alert("Success! Modpack published to https://UnknownMinecraftModpackModifications/");
+        }
+
+        function submitCustomOrder(event) {
+            event.preventDefault();
+            alert("Order submitted successfully! Wait for admin review in your office.");
+        }
+
+        function toggleSettingsModal() {
+            var modal = document.getElementById('settings-modal');
+            modal.style.display = (modal.style.display === "flex") ? "none" : "flex";
+        }
+
+        function switchTab(tab) {
+            if (!currentUserEmail) {
+                alert("Please login first.");
+                return;
+            }
+            document.getElementById('admin-dashboard').style.display = 'none';
+            document.getElementById('custom-order-screen').style.display = 'none';
+
+            if (currentUserEmail === "makar12345678902016wqacx@gmail.com") {
+                document.getElementById('admin-dashboard').style.display = 'block';
+            } else {
+                document.getElementById('custom-order-screen').style.display = 'block';
+            }
+        }
+
+        const translations = {
+            en: {
+                office: "🏢 Personal Office", wishlist: "⭐ Wishlist", cart: "🛒 Cart",
+                free: "🎮 Free Modpacks", premium: "💎 Premium Modpacks", settings: "⚙️ Settings",
+                title: "Admin / User Login", desc: "Enter your credentials for https://UnknownMinecraftModpackModifications/",
+                email: "Email Address", code: "Security Code", btn: "Login to Account",
+                modalTitle: "Profile Settings", langLabel: "Interface Language:",
+                dashTitle: "Upload Premium Modpack", dashDesc: "Configure video tutorials, hardware specifications, and pricing",
+                lblTitle: "Modpack Title", lblDesc: "Computer Requirements & Details", lblPrice: "Price (UAH)",
+                lblPhoto: "Upload Cover Photo", lblVideo: "Upload Tutorial Video (MP4)", lblSize: "File Size (e.g., 1.2 GB)",
+                btnPublish: "Publish to Site",
+                orderTitle: "Order Custom Modpack", orderDesc: "Fill in the technical questionnaire for your individual build",
+                lblVer: "Minecraft Version", lblLic: "Game Type", lblClient: "Exact Launcher Name",
+                lblMods: "Estimated Mod Count", lblReq: "Mod & Feature Requirements", lblEstPrice: "Estimated Price:",
+                btnSubmitOrder: "Send Request to Admin"
+            },
+            uk: {
+                office: "🏢 Особистий Офіс", wishlist: "⭐ Список бажань", cart: "🛒 Кошик",
+                free: "🎮 Безкоштовні збірки", premium: "💎 Преміум збірки", settings: "⚙️ Налаштування",
+                title: "Вхід в Акаунт / Адмінку", desc: "Введіть ваші дані для доступу до https://UnknownMinecraftModpackModifications/",
+                email: "Електронна адреса", code: "Код безпеки", btn: "Увійти в акаунт",
+                modalTitle: "Налаштування профілю", langLabel: "Мова інтерфейсу:",
+                dashTitle: "Завантажити Преміум Збірку", dashDesc: "Налаштування відео-інструкцій, характеристик та ціни",
+                lblTitle: "Назва збірки", lblDesc: "Вимоги до комп'ютера та деталі", lblPrice: "Ціна (грн)",
+                lblPhoto: "Завантажити обкладинку", lblVideo: "Завантажити відео (MP4)", lblSize: "Розмір файлу (наприклад, 1.2 ГБ)",
+                btnPublish: "Опублікувати на сайт",
+                orderTitle: "Замовити унікальну збірку", orderDesc: "Заповніть анкету для вашого індивідуального замовлення",
+                lblVer: "Версія Minecraft", lblLic: "Тип гри", lblClient: "Точна назва клієнта",
+                lblMods: "Орієнтовна кількість модів", lblReq: "Вимоги до модів та механік", lblEstPrice: "Орієнтовна ціна:",
+                btnSubmitOrder: "Надіслати запит розробнику"
+            }
+        };
+
+        function changeLanguage() {
+            var lang = document.getElementById('lang-select').value;
+            document.documentElement.lang = lang;
+
+            document.getElementById('menu-office').innerText = translations[lang].office;
+            document.getElementById('menu-wishlist').innerText = translations[lang].wishlist;
+            document.getElementById('menu-cart').innerText = translations[lang].cart;
+            document.getElementById('menu-free').innerText = translations[lang].free;
+            document.getElementById('menu-premium').innerText = translations[lang].premium;
+            document.getElementById('btn-settings-txt').innerText = translations[lang].settings;
+            
+            document.getElementById('login-title').innerText = translations[lang].title;
+            document.getElementById('login-desc').innerText = translations[lang].desc;
+            document.getElementById('label-email').innerText = translations[lang].email;
+            document.getElementById('label-code').innerText = translations[lang].code;
+            document.getElementById('btn-submit').innerText = translations[lang].btn;
+            
+            document.getElementById('settings-title').innerText = translations[lang].modalTitle;
+            document.getElementById('label-lang').innerText = translations[lang].langLabel;
+
+            document.getElementById('dash-title').innerText = translations[lang].dashTitle;
+            document.getElementById('dash-desc').innerText = translations[lang].dashDesc;
+            document.getElementById('lbl-title').innerText = translations[lang].lblTitle;
+            document.getElementById('lbl-desc').innerText = translations[lang].lblDesc;
+            document.getElementById('lbl-price').innerText = translations[lang].lblPrice;
+            document.getElementById('lbl-photo').innerText = translations[lang].lblPhoto;
+            document.getElementById('lbl-video').innerText = translations[lang].lblVideo;
+            document.getElementById('lbl-size').innerText = translations[lang].lblSize;
+            document.getElementById('btn-publish-txt').innerText = translations[lang].btnPublish;
+
+            document.getElementById('order-title').innerText = translations[lang].orderTitle;
+            document.getElementById('order-desc').innerText = translations[lang].orderDesc;
+            document.getElementById('lbl-ver').innerText = translations[lang].lblVer;
+            document.getElementById('lbl-lic').innerText = translations[lang].lblLic;
+            document.getElementById('lbl-client').innerText = translations[lang].lblClient;
+            document.getElementById('lbl-mods').innerText = translations[lang].lblMods;
+            document.getElementById('lbl-req').innerText = translations[lang].lblReq;
+            document.getElementById('lbl-est-price').innerText = translations[lang].lblEstPrice;
+            document.getElementById('btn-submit-order').innerText = translations[lang].btnSubmitOrder;
+        }
+    </script>
+</body>
+</html>
